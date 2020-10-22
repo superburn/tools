@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.tools.dao.OneMinuteDomainStatisticsMapper" >
+  <resultMap id="BaseResultMap" type="com.example.tools.model.OneMinuteDomainStatistics" >
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="user" property="user" jdbcType="VARCHAR" />
+    <result column="domain" property="domain" jdbcType="VARCHAR" />
+    <result column="downstream_rtmp" property="downstreamRtmp" jdbcType="BIGINT" />
+    <result column="request_count_rtmp" property="requestCountRtmp" jdbcType="BIGINT" />
+    <result column="downstream_flv" property="downstreamFlv" jdbcType="BIGINT" />
+    <result column="request_count_flv" property="requestCountFlv" jdbcType="BIGINT" />
+    <result column="downstream_hls" property="downstreamHls" jdbcType="BIGINT" />
+    <result column="request_count_hls" property="requestCountHls" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    time, user, domain, downstream_rtmp, request_count_rtmp, downstream_flv, request_count_flv, downstream_hls, request_count_hls
+  </sql>
+<select id="getDomainDownStreamByUserIdAndTime" resultType="long">
+  select sum(downstream_flv+downstream_hls+downstream_rtmp) sumDownstream
+  from one_minute_domain_statistics
+  where time <![CDATA[>=]]> #{startTime,jdbcType=TIMESTAMP} and time <![CDATA[<]]> #{endTime,jdbcType=TIMESTAMP}
+  and user = #{userId,jdbcType=VARCHAR}
+  and domain = #{domain,jdbcType=VARCHAR};
+</select>
+</mapper>

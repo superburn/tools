@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Diagnose Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="/diagnose/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/diagnose/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <!-- REQUIRED SCRIPTS -->
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="/diagnose/js/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap -->
+    <script type="text/javascript" src="/diagnose/js/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE -->
+    <script type="text/javascript" src="/diagnose/js/adminlte.min.js"></script>
+
+    <!-- OPTIONAL SCRIPTS -->
+    <script type="text/javascript" src="/diagnose/js/Chart.min.js"></script>
+    <script type="text/javascript" src="/diagnose/js/echarts.min.js"></script>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="margin-left:0px">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-blue" id="streamName" style="font-size: large"></h1>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <!--publish && forwarder-->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="card-title">主播端到节点</h3>
+                                    <a id="publishDetail" href="javascript:void(0);">查看详情</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div id="publish" style="width:600px;height:300px;">
+                                    <div class="overlay-wrapper">
+                                        <div class="overlay">
+                                            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                                            <div class="text-bold pt-2">Loading...</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!-- /.col-md-6 -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="card-title">节点到源站</h3>
+                                    <a id="forwarderDetail" href="javascript:void(0);">查看详情</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div id="forwarder" style="width:600px;height:300px;">
+                                    <div class="overlay-wrapper">
+                                        <div class="overlay">
+                                            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                                            <div class="text-bold pt-2">Loading...</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col-md-6 -->
+                </div>
+                <!-- /.row -->
+
+                <!--inner && outer-->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="card-title">源站inner</h3>
+                                    <a id="innerDetail" href="javascript:void(0);">查看详情</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div id="inner" style="width:600px;height:300px;">
+                                    <div class="overlay-wrapper">
+                                        <div class="overlay">
+                                            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                                            <div class="text-bold pt-2">Loading...</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!-- /.col-md-6 -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="card-title">源站outer</h3>
+                                    <a id="outerDetail" href="javascript:void(0);">查看详情</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div id="outer" style="width:600px;height:300px;">
+                                    <div class="overlay-wrapper">
+                                        <div class="overlay">
+                                            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                                            <div class="text-bold pt-2">Loading...</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col-md-6 -->
+                </div>
+                <!-- /.row -->
+
+                <!--ingester && play-->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="card-title">回源</h3>
+                                    <a id="ingesterDetail" href="javascript:void(0)">查看详情</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div id="ingester" style="width:600px;height:300px;">
+                                    <div class="overlay-wrapper">
+                                        <div class="overlay">
+                                            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                                            <div class="text-bold pt-2">Loading...</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card -->
+
+                    </div>
+                    <!-- /.col-md-6 -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="card-title">观众端到节点</h3>
+                                    <a id="playDetail" href="javascript:void(0);">查看详情</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div id="play" style="width:600px;height:300px;">
+                                    <div class="overlay-wrapper">
+                                        <div class="overlay">
+                                            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                                            <div class="text-bold pt-2">Loading...</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col-md-6 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+</body>
+<script type="text/javascript" th:inline="javascript">
+
+    let stream = [[${stream}]];
+    let endTime = [[${endTime}]];
+
+    $("#streamName").html(stream);
+
+    //publish数据
+    $.ajax({
+        type: "GET",
+        data: {"stream": stream, "endTime": endTime},
+        dataType: "json",
+        url: "/diagnose/quality/publish?",
+        timeout:20000,
+        success: function (response) {
+            let publish = echarts.init(document.getElementById('publish'));
+            let series_col = [];
+            for (let node_name in response.pub) {
+                let series = {};
+                series["name"] = node_name;
+                series["type"] = 'line';
+                series["data"] = response.pub[node_name].fps;
+                series_col.push(series);
+            }
+            let publishData = {
+                tooltip: {},
+                legend: {
+                    data: response.pub.node
+                },
+                xAxis: {
+                    data: response.time
+                },
+                yAxis: {},
+                series: series_col
+            };
+            publish.setOption(publishData);
+
+            //查看详情url
+            $("#publishDetail").attr("href", "/diagnose/details?nodes=" + response.nodes + "&endTime=" + endTime);
+        }
+    });
+
+
+    $.ajax({
+        type: "GET",
+        data: {"stream": stream, "endTime": endTime},
+        dataType: "json",
+        url: "/diagnose/quality/forwarder?",
+        timeout:20000,
+        success: function (response) {
+            //forwarder数据
+            let forwarder = echarts.init(document.getElementById('forwarder'));
+            let series_col = [];
+            for (let host in response.fwd) {
+                let series = {};
+                series["name"] = host;
+                series["type"] = 'line';
+                series["data"] = response.fwd[host].fps;
+                series_col.push(series);
+            }
+            let forwarderData = {
+                tooltip: {},
+                legend: {
+                    data: response.fwd.host
+                },
+                xAxis: {
+                    data: response.fwd_time
+                },
+                yAxis: {},
+                series: series_col
+            };
+            forwarder.setOption(forwarderData);
+
+            //查看详情url
+            $("#forwarderDetail").attr("href", "/diagnose/details?nodes=" + response.fwd_nodes + "&hosts=" + response.fwd_hosts + "&endTime=" + endTime);
+
+            //inner数据
+            let inner = echarts.init(document.getElementById('inner'));
+            let inner_series_col = [];
+            for (let host in response.inner) {
+                let series = {};
+                series["name"] = host;
+                series["type"] = 'line';
+                series["data"] = response.inner[host].fps;
+                inner_series_col.push(series);
+            }
+            let innerData = {
+                tooltip: {},
+                legend: {
+                    data: response.inner.host
+                },
+                xAxis: {
+                    data: response.inner_time
+                },
+                yAxis: {},
+                series: inner_series_col
+            };
+            inner.setOption(innerData);
+
+            //查看详情url
+            $("#innerDetail").attr("href", "/diagnose/details?hosts=" + response.inner_hosts + "&endTime=" + endTime);
+
+            //outer数据
+            let outer = echarts.init(document.getElementById('outer'));
+            let outer_series_col = [];
+            for (let host in response.outer) {
+                let series = {};
+                series["name"] = host;
+                series["type"] = 'line';
+                series["data"] = response.outer[host].fps;
+                outer_series_col.push(series);
+            }
+            let outerData = {
+                tooltip: {},
+                legend: {
+                    data: response.outer.host
+                },
+                xAxis: {
+                    data: response.outer_time
+                },
+                yAxis: {},
+                series: outer_series_col
+            };
+            outer.setOption(outerData);
+
+            //查看详情url
+            $("#outerDetail").attr("href", "/diagnose/details?hosts=" + response.outer_hosts + "&endTime=" + endTime);
+        }
+    });
+
+    $.ajax({
+        type: "GET",
+        data: {"stream": stream, "endTime": endTime},
+        dataType: "json",
+        url: "/diagnose/quality/ingester?",
+        success: function (response) {
+            $("#ingester").empty();
+            //ingester数据
+            let ingester = echarts.init(document.getElementById('ingester'));
+            let series_col = [];
+            let node_col = [];
+            for (let node_name in response.node) {
+                let series = {};
+                series["name"] = node_name;
+                series["type"] = 'line';
+                series["data"] = response.node[node_name].fps;
+                series_col.push(series);
+                node_col.push(node_name);
+            }
+
+            let ingesterData = {
+                tooltip: {},
+                legend: {
+                    data: node_col
+                },
+                xAxis: {
+                    data: response.timeList
+                },
+                yAxis: {},
+                series: series_col
+            };
+            ingester.setOption(ingesterData);
+
+            //查看详情url
+            $("#ingesterDetail").attr("href", "/diagnose/details?nodes=" + response.nodes + "&endTime=" + endTime);
+        }
+    });
+
+    $.ajax({
+        type: "GET",
+        data: {"stream": stream, "endTime": endTime},
+        dataType: "json",
+        url: "/diagnose/quality/play?",
+        success: function (response) {
+            $("#play").empty();
+            //play数据
+            let play = echarts.init(document.getElementById('play'));
+            let series_col = [];
+            let node_col = [];
+            for (let node_name in response.node) {
+                let series = {};
+                series["name"] = node_name;
+                series["type"] = 'line';
+                series["data"] = response.node[node_name].fps;
+                series_col.push(series);
+                node_col.push(node_name);
+            }
+
+            let playData = {
+                tooltip: {},
+                legend: {
+                    data: node_col
+                },
+                xAxis: {
+                    data: response.timeList
+                },
+                yAxis: {},
+                series: series_col
+            };
+            play.setOption(playData);
+
+            //查看详情url
+            $("#playDetail").attr("href", "/diagnose/details?nodes=" + response.nodes + "&endTime=" + endTime);
+        }
+    });
+</script>
+</html>

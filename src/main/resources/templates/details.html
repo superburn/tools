@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Diagnose Report | details</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/diagnose/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/diagnose/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="/diagnose/js/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap -->
+    <script type="text/javascript" src="/diagnose/js/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE -->
+    <script type="text/javascript" src="/diagnose/js/adminlte.min.js"></script>
+
+    <!-- OPTIONAL SCRIPTS -->
+    <script type="text/javascript" src="/diagnose/js/Chart.min.js"></script>
+    <script type="text/javascript" src="/diagnose/js/echarts.min.js"></script>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="margin-left:0px">
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item"><a class="nav-link active" href="#node_metrics"
+                                                            data-toggle="tab">节点探测</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" href="#machine_metrics" data-toggle="tab">机器性能</a>
+                                    </li>
+                                </ul>
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="node_metrics">
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="machine_metrics">
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                </div>
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
+                        </div>
+                        <!-- /.nav-tabs-custom -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+</body>
+<script type="text/javascript" th:inline="javascript">
+    let nodes = [[${nodes}]];
+    let startTs = [[${startTs}]];
+    let endTs = [[${endTs}]];
+    let share_json = [[${share_json}]];
+
+    if (nodes != null && nodes.length > 0) {
+        node_metrics();
+    }
+    if (share_json != null && share_json.length > 0) {
+        machine_metrics();
+    }
+
+    function node_metrics() {
+        let node_arr = nodes.toString().split(",");
+
+        let parent = $("#node_metrics")[0];
+
+        for (let i = 0; i < node_arr.length; i++) {
+            let node_name;
+            if (node_arr[i].split("-").length > 1) {
+                node_name = node_arr[i].split("-")[0].toUpperCase();
+            } else {
+                node_name = node_arr[i].toUpperCase();
+            }
+
+            let div = document.createElement("div");
+            div.setAttribute("class", "embed-responsive embed-responsive-16by9");
+            div.style.position = "relative";
+            let iframe = document.createElement("iframe");
+            div.innerHTML = "  <div id=\"loading-" + i + "\" class=\"overlay-wrapper\"><div class=\"overlay\"><i class=\"fas fa-3x fa-sync-alt fa-spin\"></i>\n" +
+                "<div class=\"text-bold pt-2\">Loading...</div></div></div>";
+
+            iframe.setAttribute("class", "embed-responsive-item");
+            iframe.src = "http://cdn.baidu.com/oss/index.php?r=tools/jomoCha/index&metric=cdnsli.server.dcdn.node.ratio" +
+                "&startTs=" + startTs + "&endTs=" + endTs + "&grad=1min&node=" + node_name;
+            iframe.addEventListener("load", function () {
+                $("#loading-" + i).empty();
+            });
+            div.appendChild(iframe);
+            parent.appendChild(div);
+        }
+    }
+
+    function machine_metrics() {
+        let parent = $("#machine_metrics")[0];
+
+        let div = document.createElement("div");
+        div.setAttribute("class", "embed-responsive embed-responsive-16by9");
+        div.style.position = "relative";
+        let iframe = document.createElement("iframe");
+        div.innerHTML = "  <div id=\"loading-machine\" class=\"overlay-wrapper\"><div class=\"overlay\"><i class=\"fas fa-3x fa-sync-alt fa-spin\"></i>\n" +
+            "<div class=\"text-bold pt-2\">Loading...</div></div></div>";
+
+        iframe.setAttribute("class", "embed-responsive-item");
+        iframe.src = "http://mt.noah.baidu.com/monife/templates/visualize4.php?nodeid=200285482&share=" + share_json;
+        iframe.addEventListener("load", function () {
+            $("#loading-machine").empty();
+        });
+        div.appendChild(iframe);
+        parent.appendChild(div);
+    }
+
+
+</script>
+</html>
